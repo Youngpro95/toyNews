@@ -35,16 +35,16 @@ inputVal.addEventListener("keydown", (e) => {
   }
 }); // 검색 히스토리 배열 저장 및 5개이상 시 가장 처음 검색했던 내용 삭제
 
-inputVal.addEventListener("click", (e) => {
-  console.log("눌렸습니다");
-  // const keywordDiv = document.body.querySelector("#recentKeyword");
-  // console.log(keywordDiv)
-  // if (keywordDiv.style.visibility === "hidden") {
-  //   keywordDiv.style.visibility = "visible";
-  // } else {
-  //   keywordDiv.style.visibility = "hidden";
-  // }
-});
+document.body.addEventListener("click", (e)=>{
+  const searchHistoryBox = document.body.querySelector("#searchHistoryBox");
+  if(e.target == e.currentTarget.querySelector("input")){
+    console.log("나타남")
+    searchHistoryBox.style.display = "block";
+  }else{
+   console.log("사라짐");
+    searchHistoryBox.style.display = "none";
+  }
+})
 
 inputVal.addEventListener("compositionupdate", (e) => {
   //keyup 후보
