@@ -37,7 +37,7 @@ inputVal.addEventListener("keydown", (e) => {
 
 document.body.addEventListener("click", (e)=>{
   const searchHistoryBox = document.body.querySelector("#searchHistoryBox");
-  if(e.target == e.currentTarget.querySelector("input")){
+  if(e.target == e.currentTarget.querySelector("input")){ // input 클릭시 만족하여 보여지게끔 함
     console.log("나타남")
     searchHistoryBox.style.display = "block";
   }else{
