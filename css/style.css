@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
 }
+#searchResult{
+  margin-top:0px;
+  
+  
+}
 #searchHistoryBox{
   display : none;
   border-bottom : 1px solid black;
@@ -13,11 +18,22 @@ input {
   border-left: 1px black;
   border-right: 1px black;
 }
-#article{
-  padding : 10px 20px;
+.article{
   border-bottom : 1px solid black;
+  margin-bottom: 3px;
 }
 
+.newsHead{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+#newsDate{
+  margin-left: 20px;
+}
+#clipBtn{
+  margin-left: 20px;
+}
 #detailBtn{
   margin-left: 10px;
+  margin-bottom: 10px;
 }

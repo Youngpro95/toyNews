@@ -25,16 +25,28 @@ function addDiv() {
 
 inputVal.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
+    clearDiv();
     searchArray.unshift(e.target.value);
     addDiv();
     if (searchArray.length === 6) {
       searchArray.pop();
       console.log(searchArray);
-    } else {
-      console.log(searchArray);
     }
   }
 }); // 검색 히스토리 배열 저장 및 5개이상 시 가장 처음 검색했던 내용 삭제
+
+function clearDiv(){
+  const articleInfo = document.querySelector("#searchResult") //최상위
+  let headnews = document.querySelector(".newsHead")
+  console.log(articleInfo)
+  if(articleInfo === null){
+    return console.log("널값");
+  }
+  while(articleInfo.hasChildNodes()){
+    articleInfo.removeChild(articleInfo.firstChild);
+  }
+}
+
 
 document.body.addEventListener("click", (e)=>{
   const searchHistoryBox = document.body.querySelector("#searchHistoryBox");
@@ -52,6 +64,7 @@ function SearchArticle(item) {
   .then((response)=>  response.json())
   .then((data)=>{
     for(let i=0;i<=data.response.docs.length; i++){
+      const searchResult = document.querySelector("#searchResult")
       const articleDiv = document.createElement("div");
       const headlineDiv = document.createElement("div");
       const newsDate = document.createElement("div");
@@ -59,17 +72,16 @@ function SearchArticle(item) {
       const urlLink = document.createElement("a");
       const urlBtn = document.createElement("button");
       
-      articleDiv.setAttribute("id","article");
-      headlineDiv.setAttribute("id", "newsHead");
+      // searchResult.setAttribute("id", "searchResult");
+      articleDiv.setAttribute("class","article");
+      headlineDiv.setAttribute("class", "newsHead");
       newsDate.setAttribute("id","newsDate");
       clipBtn.setAttribute("id", "clipBtn");
       urlLink.setAttribute("id", "urlLink");
       urlBtn.setAttribute("id", "detailBtn");
       function convertDate(item) {
-        console.log(data.response.docs[item].pub_date);
         const NYTdate = new Date(data.response.docs[item].pub_date)
-        let convDate = NYTdate.getFullYear()+". "+ (NYTdate.getMonth()+1)+". "+NYTdate.getDate()+". "+NYTdate.toLocaleTimeString();
-        return convDate
+        return NYTdate.getFullYear()+". "+ (NYTdate.getMonth()+1)+". "+NYTdate.getDate()+". "+NYTdate.toLocaleTimeString();     
       }
       headlineDiv.innerHTML = data.response.docs[i].headline.main
       newsDate.innerHTML = convertDate(i);
@@ -78,10 +90,10 @@ function SearchArticle(item) {
       clipBtn.innerHTML = "Clip This"
       urlBtn.innerHTML = "See Detail"
       console.log("출력");
-      // console.log(newsDate);
+      console.log(headlineDiv);
       
-      const articleInfo = document.querySelector("#article")
-      document.body.append(articleDiv)
+      
+      searchResult.appendChild(articleDiv);
       articleDiv.appendChild(headlineDiv);
       articleDiv.appendChild(newsDate);
       articleDiv.appendChild(clipBtn);
@@ -99,7 +111,7 @@ function test(){
   .then((response)=>  response.json())
   .then((data)=>console.log(data))
 }
-test(); 구조확인용
+// test(); 구조확인용
 
 
 inputVal.addEventListener("compositionupdate", (e) => {
