@@ -20,6 +20,7 @@ function addDiv() {
     })();
   }
   keywordHistory.prepend(searchHistoryDiv);
+  SearchArticle(inputVal.value)
 }
 
 inputVal.addEventListener("keydown", (e) => {
@@ -45,6 +46,61 @@ document.body.addEventListener("click", (e)=>{
     searchHistoryBox.style.display = "none";
   }
 })
+
+function SearchArticle(item) {
+  fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${item}&api-key=qbVKMvjD8NnyNN4dAYbv7kIxGZs0mrjK`)
+  .then((response)=>  response.json())
+  .then((data)=>{
+    for(let i=0;i<=data.response.docs.length; i++){
+      const articleDiv = document.createElement("div");
+      const headlineDiv = document.createElement("div");
+      const newsDate = document.createElement("div");
+      const clipBtn = document.createElement("button");
+      const urlLink = document.createElement("a");
+      const urlBtn = document.createElement("button");
+      
+      articleDiv.setAttribute("id","article");
+      headlineDiv.setAttribute("id", "newsHead");
+      newsDate.setAttribute("id","newsDate");
+      clipBtn.setAttribute("id", "clipBtn");
+      urlLink.setAttribute("id", "urlLink");
+      urlBtn.setAttribute("id", "detailBtn");
+      function convertDate(item) {
+        console.log(data.response.docs[item].pub_date);
+        const NYTdate = new Date(data.response.docs[item].pub_date)
+        let convDate = NYTdate.getFullYear()+". "+ (NYTdate.getMonth()+1)+". "+NYTdate.getDate()+". "+NYTdate.toLocaleTimeString();
+        return convDate
+      }
+      headlineDiv.innerHTML = data.response.docs[i].headline.main
+      newsDate.innerHTML = convertDate(i);
+      urlLink.href = data.response.docs[i].web_url
+      urlLink.target="_blank"
+      clipBtn.innerHTML = "Clip This"
+      urlBtn.innerHTML = "See Detail"
+      console.log("출력");
+      // console.log(newsDate);
+      
+      const articleInfo = document.querySelector("#article")
+      document.body.append(articleDiv)
+      articleDiv.appendChild(headlineDiv);
+      articleDiv.appendChild(newsDate);
+      articleDiv.appendChild(clipBtn);
+      articleDiv.appendChild(urlLink);
+      urlLink.appendChild(urlBtn);
+    }
+  }
+  )
+}
+
+
+
+function test(){
+  fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=covid&api-key=qbVKMvjD8NnyNN4dAYbv7kIxGZs0mrjK`)
+  .then((response)=>  response.json())
+  .then((data)=>console.log(data))
+}
+test(); 구조확인용
+
 
 inputVal.addEventListener("compositionupdate", (e) => {
   //keyup 후보
