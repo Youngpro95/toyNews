@@ -1,5 +1,6 @@
 const inputVal = document.body.querySelector("input");
 const searchButton = document.body.querySelector("body > button");
+let index = 1;
 
 console.log(inputVal.value);
 let searchArray = [];
@@ -20,7 +21,7 @@ function addDiv() {
     })();
   }
   keywordHistory.prepend(searchHistoryDiv);
-  SearchArticle(inputVal.value)
+  SearchArticle(inputVal.value , 0)
 }
 
 inputVal.addEventListener("keydown", (e) => {
@@ -40,7 +41,7 @@ function clearDiv(){
   let headnews = document.querySelector(".newsHead")
   console.log(articleInfo)
   if(articleInfo === null){
-    return console.log("널값");
+    return console.log("패스");
   }
   while(articleInfo.hasChildNodes()){
     articleInfo.removeChild(articleInfo.firstChild);
@@ -59,8 +60,57 @@ document.body.addEventListener("click", (e)=>{
   }
 })
 
-function SearchArticle(item) {
-  fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${item}&api-key=qbVKMvjD8NnyNN4dAYbv7kIxGZs0mrjK`)
+
+// 옵저버 생성
+function observe() {
+  const listEnd = document.querySelector(".endDiv");
+  const searchResultDiv = document.querySelector("#searchResult");
+  const endDiv = document.querySelector(".endDiv")
+
+  const option = {
+    root: null,
+    rootMargin: "0px 0px 0px 0px",
+    thredhold: 0,
+  };
+  const onIntersect = (entries, observer) => {
+    // entries는 IntersectionObserverEntry 객체의 리스트로 배열 형식을 반환합니다.
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("탐지 완료");
+        searchResultDiv.removeChild(endDiv);
+        SearchArticle(inputVal.value, index);
+        return index++;
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(onIntersect, option);
+  observer.observe(listEnd);
+}
+
+
+// window.addEventListener("scroll", (e)=>{
+//   const curScroll = window.scrollY;
+//   const windowHeight = window.innerHeight;
+//   const bodyHeight = document.body.clientHeight;
+//   // console.log("현재스크롤 : " ,curScroll);
+//   // console.log("windowHeight : ", windowHeight);
+//   // console.log("bodyHeight : ", bodyHeight);
+//   const paddingBottom = 200;
+
+//   if(curScroll + windowHeight + paddingBottom>= bodyHeight){
+//     console.log("-----");
+//     SearchArticle(inputVal.value, index)
+//     return index++;
+//   }
+// }
+// );   잦은 scroll 이벤트로 인한 제거 
+
+
+
+function SearchArticle(item, index) {
+  console.log(item, index);
+  fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${item}&page=${index}&api-key=qbVKMvjD8NnyNN4dAYbv7kIxGZs0mrjK`)
   .then((response)=>  response.json())
   .then((data)=>{
     for(let i=0;i<=data.response.docs.length; i++){
@@ -89,8 +139,8 @@ function SearchArticle(item) {
       urlLink.target="_blank"
       clipBtn.innerHTML = "Clip This"
       urlBtn.innerHTML = "See Detail"
-      console.log("출력");
-      console.log(headlineDiv);
+      // console.log("출력");
+      // console.log(headlineDiv);
       
       
       searchResult.appendChild(articleDiv);
@@ -99,6 +149,14 @@ function SearchArticle(item) {
       articleDiv.appendChild(clipBtn);
       articleDiv.appendChild(urlLink);
       urlLink.appendChild(urlBtn);
+      if(i == data.response.docs.length-2){
+        const endDiv = document.createElement("div")
+        endDiv.setAttribute("class","endDiv")
+        searchResult.appendChild(endDiv)
+        console.log("endDiv 생성");
+        observe();
+        
+      }
     }
   }
   )
