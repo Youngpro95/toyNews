@@ -53,6 +53,18 @@ function clearDiv(){
 
 document.body.addEventListener("click", (e)=>{
   const searchHistoryBox = document.body.querySelector("#searchHistoryBox");
+  if(e.target == e.currentTarget.querySelector("#clipedNews")){
+    console.log("버튼클릭")
+    if(e.currentTarget.querySelector("#clipedNews").innerText == "Clip된 뉴스만 보기"){
+      // 7/31 일 구현해야할 내용 : .searchResult 안에있는 class가 article 인것 display : none으로 바꾸기
+      
+      e.currentTarget.querySelector("#clipedNews").innerText= "모든 뉴스 보기"
+    }else{
+      e.currentTarget.querySelector("#clipedNews").innerText= "Clip된 뉴스만 보기"
+    }
+    
+
+  }
   if(e.target == e.currentTarget.querySelector("input")){ // input 클릭시 만족하여 보여지게끔 함
     console.log("나타남")
     searchHistoryBox.style.display = "block";
@@ -68,7 +80,6 @@ document.body.addEventListener("click", (e)=>{
       clip(el, index);
     }
   })
-  
 
   
 })
@@ -77,15 +88,21 @@ document.body.addEventListener("click", (e)=>{
 
 function clip(el ,index){
   const clipArticle = document.querySelectorAll(".article")
-  
-  // console.log("clip 함수 : " + index);
-  // console.log(clipArticle.item(index));
-  // console.log(clipArticle.item(index).childNodes[2].innerText  );
+  const searchResult = document.querySelector("#searchResult")
   
   if(clipArticle.item(index).childNodes[2].innerText == "Clip This"){
+    const nodeClip = clipArticle.item(index).cloneNode(true);
+    nodeClip.setAttribute("class" , "cliped")
+    console.log(nodeClip);
+    searchResult.appendChild(nodeClip)
+    const changeDivStyle = document.body.querySelector(".cliped")
+    changeDivStyle.style.display="none";
+    
     clipArticle.item(index).childNodes[2].innerText = "Unclip this"
   }else{
+    const changeDivStyle = document.body.querySelector(".cliped")
     clipArticle.item(index).childNodes[2].innerText = "Clip This"
+    changeDivStyle.style.display="block";
   }
 }
 
