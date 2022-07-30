@@ -1,5 +1,6 @@
 const inputVal = document.body.querySelector("input");
 const searchButton = document.body.querySelector("body > button");
+
 let index = 1;
 
 console.log(inputVal.value);
@@ -36,6 +37,7 @@ inputVal.addEventListener("keydown", (e) => {
   }
 }); // 검색 히스토리 배열 저장 및 5개이상 시 가장 처음 검색했던 내용 삭제
 
+
 function clearDiv(){
   const articleInfo = document.querySelector("#searchResult") //최상위
   let headnews = document.querySelector(".newsHead")
@@ -58,7 +60,40 @@ document.body.addEventListener("click", (e)=>{
    console.log("사라짐");
     searchHistoryBox.style.display = "none";
   }
+  
+  const clipBtn = document.querySelectorAll(".clipBtn")
+  
+  clipBtn.forEach((el,index)=>{
+    el.onclick= () =>{
+      clip(el, index);
+    }
+  })
+  
+
+  
 })
+
+
+
+function clip(el ,index){
+  const clipArticle = document.querySelectorAll(".article")
+  
+  // console.log("clip 함수 : " + index);
+  // console.log(clipArticle.item(index));
+  // console.log(clipArticle.item(index).childNodes[2].innerText  );
+  
+  if(clipArticle.item(index).childNodes[2].innerText == "Clip This"){
+    clipArticle.item(index).childNodes[2].innerText = "Unclip this"
+  }else{
+    clipArticle.item(index).childNodes[2].innerText = "Clip This"
+  }
+}
+
+
+
+
+
+
 
 
 // 옵저버 생성
@@ -126,7 +161,7 @@ function SearchArticle(item, index) {
       articleDiv.setAttribute("class","article");
       headlineDiv.setAttribute("class", "newsHead");
       newsDate.setAttribute("id","newsDate");
-      clipBtn.setAttribute("id", "clipBtn");
+      clipBtn.setAttribute("class", "clipBtn");
       urlLink.setAttribute("id", "urlLink");
       urlBtn.setAttribute("id", "detailBtn");
       function convertDate(item) {
@@ -141,7 +176,6 @@ function SearchArticle(item, index) {
       urlBtn.innerHTML = "See Detail"
       // console.log("출력");
       // console.log(headlineDiv);
-      
       
       searchResult.appendChild(articleDiv);
       articleDiv.appendChild(headlineDiv);

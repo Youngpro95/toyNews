@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<div id="endList"></div>
+</body>
+<script>
+  const listEnd = document.querySelector("#endList");
+const option = {
+    root: null,
+    rootMargin: "0px 0px 0px 0px",
+    thredhold: 0,
+}
+
+const onIntersect = (entries, observer) => { 
+    // entries는 IntersectionObserverEntry 객체의 리스트로 배열 형식을 반환합니다.
+    entries.forEach(entry => {
+        if(entry.isIntersecting){
+            const listWrap = document.querySelector("ul");
+            listWrap.insertAdjacentHTML("beforeend", `
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            `)
+        }
+    });
+};
+
+const observer = new IntersectionObserver(onIntersect, option);
+observer.observe(listEnd);
+</script>
+</html>
