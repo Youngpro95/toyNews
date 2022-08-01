@@ -21,6 +21,7 @@ input {
 .article{
   border-bottom : 1px solid black;
   margin-bottom: 3px;
+  display : block;
 }
 .clipNews{  
   border-bottom : 1px solid black;
@@ -34,7 +35,7 @@ input {
   margin-left: 20px;
   margin-top: 10px;
 }
-#newsDate{
+.newsDate{
   margin-left: 20px;
 }
 .clipBtn{
