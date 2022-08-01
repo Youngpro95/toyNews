@@ -1,11 +1,10 @@
 const searchResult = document.querySelector("#searchResult") //최상위
-const inputVal = document.body.querySelector("input");
-const searchButton = document.body.querySelector("body > button");
-const dom = document.querySelector("#searchHistory:nth-child(5)");
+const inputVal = document.querySelector("input");
+const searchButton = document.querySelector("body > button");
+const searchHistoryChild = document.querySelector("#searchHistory:nth-child(5)");
 const keywordHistory = document.querySelector("#recentKeyword");
 const searchHistoryBox = document.querySelector("#searchHistoryBox");
-const article = document.querySelectorAll(".article")
-const clipArticle = document.querySelectorAll(".article")
+
 
 let searchArray = [];
 let index = 1;
@@ -17,9 +16,9 @@ function addDiv() {
 
   if (searchArray.length === 6) {
     (function () {
-      dom.parentElement.removeChild(dom);
-      console.log("실행");
-      console.log(dom);
+      searchHistoryChild.parentElement.removeChild(searchHistoryChild);
+      // console.log("실행");
+      // console.log(searchHistoryChild);
     })();
   }
   keywordHistory.prepend(searchHistoryDiv);
@@ -50,52 +49,60 @@ function clearDiv(){
   }
 }
 
-
-document.body.addEventListener("click", (e)=>{
+function checkClip(){
   const clipedClass = document.querySelector(".cliped")
-  
-  if(e.target == e.currentTarget.querySelector("#clipedNews")){
+  const clipedNewsEl = document.querySelector("#clipedNews")
+  const article = document.querySelectorAll(".article")
 
-    if(e.currentTarget.querySelector("#clipedNews").innerText == "Clip된 뉴스만 보기"){
-      // 7/31 일 구현해야할 내용 : .searchResult 안에있는 class가 article 인것 display : none으로 바꾸기
-      e.currentTarget.querySelector("#clipedNews").innerText= "모든 뉴스 보기"
-      
-      if(clipedClass == null){ //클립된 뉴스가 있는지 확인 없으면 article class 전체 display none
-        console.log("클립된 뉴스가 없습니다.");
-        article.forEach((el, index)=>{
-          console.log(article[el])
-          console.log(index);
-          article[index].style.display = "none";
-          document.body.querySelector(".endDiv").style.display = "none";
-        })
-      }else{
-        console.log("clip한 뉴스 있음");
-        article.forEach((el, index)=>{
-          console.log(article[el])
-          console.log(index);
-          article[index].style.display = "none";
-          document.body.querySelector(".endDiv").style.display = "none";
-          clipedClass.style.display = "block";
-        })
-      }
-
-    }else{
-      e.currentTarget.querySelector("#clipedNews").innerText= "Clip된 뉴스만 보기"
-
+  if(clipedNewsEl.innerText == "Clip된 뉴스만 보기"){
+    // 7/31 일 구현해야할 내용 : .searchResult 안에있는 class가 article 인것 display : none으로 바꾸기
+    clipedNewsEl.innerText= "모든 뉴스 보기"
+    
+    if(clipedClass == null){ //클립된 뉴스가 있는지 확인 없으면 article class 전체 display none
+      console.log("클립된 뉴스가 없습니다.");
       article.forEach((el, index)=>{
         console.log(article[el])
-        article[index].style.display = "block";
-        document.body.querySelector(".endDiv").style.display = "block";
-        if(clipedClass != null) {
-          clipedClass.style.display="none";
-        }
+        console.log(index);
+        article[index].style.display = "none";
+        document.body.querySelector(".endDiv").style.display = "none";
       })
-
-      
+    }else{
+      console.log("clip한 뉴스 있음");
+      article.forEach((el, index)=>{
+        console.log(article[el])
+        console.log(index);
+        article[index].style.display = "none";
+        document.body.querySelector(".endDiv").style.display = "none";
+        clipedClass.style.display = "block";
+      })
     }
-    
 
+  }else{
+    clipedNewsEl.innerText= "Clip된 뉴스만 보기"
+
+    article.forEach((el, index)=>{
+      console.log(article[el])
+      article[index].style.display = "block";
+      document.body.querySelector(".endDiv").style.display = "block";
+      if(clipedClass != null) {
+        clipedClass.style.display="none";
+      }
+    })
+
+    
   }
+  
+
+}
+
+
+
+document.body.addEventListener("click", (e)=>{
+  
+  
+  if(e.target == e.currentTarget.querySelector("#clipedNews")){
+    checkClip();
+  }  
   if(e.target == e.currentTarget.querySelector("input")){ // input 클릭시 만족하여 보여지게끔 함
     console.log("나타남")
     searchHistoryBox.style.display = "block";
@@ -118,7 +125,8 @@ document.body.addEventListener("click", (e)=>{
 
 
 function clip(el ,index){
-  
+  const clipArticle = document.querySelectorAll(".article")
+
   if(clipArticle.item(index).childNodes[2].innerText == "Clip This"){
     const nodeClip = clipArticle.item(index).cloneNode(true);
     nodeClip.setAttribute("class" , "cliped")
