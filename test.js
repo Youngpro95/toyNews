@@ -4,6 +4,7 @@ let searchArray = [];
 let pageIndex = 1;
 let articleArr =[];
 let clipedArr = [];
+let unclipText;
 
 document.body.addEventListener("click",()=>{
   const clipBtn = document.querySelectorAll(".clipBtn")
@@ -73,11 +74,11 @@ function checkClip(){
       }
     }else{
       console.log("클립된 뉴스가 있습니다.");
-      while(searchResult.hasChildNodes()){
-        searchResult.removeChild(searchResult.firstChild);
+      while(searchResult.hasChildNodes()){ //지우기
+        searchResult.removeChild(searchResult.firstChild); 
       }
       for(let i = 0; i < clipedArr.length; i++){
-        console.log("clipledArr >>>:  ",  clipedArr[i]);
+        // console.log("clipledArr >>>:  ",  clipedArr[i]);
         searchResult.appendChild(clipedArr[i])
       }
       const clipBtn = document.querySelectorAll(".clipBtn")
@@ -88,8 +89,13 @@ function checkClip(){
       searchResult.removeChild(searchResult.firstChild);
     }
     articleArr.forEach((el,index)=>{
-      console.log(index);
       searchResult.appendChild(articleArr[index])
+    })
+    const article = document.querySelectorAll(".article")
+    article.forEach((articleEl, articleIndex)=>{
+      if(articleEl.childNodes[1].innerText == unclipText){
+        articleEl.childNodes[5].innerText = "Clip this";
+      }
     })
   }
 }
@@ -122,17 +128,28 @@ function clip(el ,index){
   const searchResult = document.querySelector("#searchResult") //최상위
   const cloneArticle = clipArticle.item(index).cloneNode(true);
   const article = document.querySelectorAll(".article")
+  const clipedNewsEl = document.querySelector("#clipedNews")
   
+  
+  
+
   // console.log(el.innerText);
   if(el.innerText == "Clip this"){
     clipedArr.push(cloneArticle)
     cloneArticle.querySelector(".clipBtn").innerHTML = "Unclip this"
     el.innerHTML = "Unclip this";
-    console.log("clipedArr : " , clipedArr);
+    console.log("클릭된 친구의 index : " , index);
+    console.log("클릭된 친구의 el : " , el);
   }else{
     el.innerHTML = "Clip this"
     clipedArr.splice(index,1)
-    searchResult.removeChild(article[index])
+    console.log("언클립 누른 Index : " , index);
+    console.log("언클립 누른 El : " , el.parentElement.childNodes[1].innerText);
+    if(clipedNewsEl.innerText == "모든 뉴스 보기"){
+      searchResult.removeChild(article[index])
+      unclipText = el.parentElement.childNodes[1].innerText;
+    }
+    //기존 el 속성을 바꿔야함.
     console.log(clipedArr);
   }
 }
