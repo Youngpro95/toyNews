@@ -1,16 +1,28 @@
-const inputVal = document.querySelector("input");
+const inputEl = document.querySelector("input");
+const clipedNewsEl = document.querySelector('#clipedNews');
 let searchArray = [];
 let pageIndex = 1;
 let articleArr =[];
 let clipedArr = [];
 
+document.body.addEventListener("click",()=>{
+  const clipBtn = document.querySelectorAll(".clipBtn")
+  
+
+  clipBtn.forEach((el,index)=>{
+    el.onclick= () =>{
+      clip(el, index);
+    }
+  })
+})
+
 function addDiv() {
   const keywordHistory = document.querySelector("#recentKeyword");
-  const inputVal = document.querySelector("input");
+  const inputEl = document.querySelector("input");
   const searchHistoryDiv = document.createElement("div");
   const searchHistoryChild = document.querySelector("#searchHistory:nth-child(5)");
 
-  searchHistoryDiv.innerHTML = inputVal.value;
+  searchHistoryDiv.innerHTML = inputEl.value;
   searchHistoryDiv.setAttribute("id", "searchHistory");
 
   if (searchArray.length === 6) {
@@ -19,10 +31,10 @@ function addDiv() {
     })();
   }
   keywordHistory.prepend(searchHistoryDiv);
-  SearchArticle(inputVal.value , 0)
+  SearchArticle(inputEl.value , 0)
 }
 
-inputVal.addEventListener("keydown", (e) => {
+inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     clearDiv();
     searchArray.unshift(e.target.value);
@@ -47,65 +59,46 @@ function clearDiv(){
 
 function checkClip(){
   const searchResult = document.querySelector("#searchResult") //최상위
-  const clipedClass = document.querySelector(".cliped")
   const clipedNewsEl = document.querySelector("#clipedNews")
-  const article = document.querySelectorAll(".article")
 
+
+  
   if(clipedNewsEl.innerText == "Clip된 뉴스만 보기"){
     // 7/31 일 구현해야할 내용 : .searchResult 안에있는 class가 article 인것 display : none으로 바꾸기
     clipedNewsEl.innerText= "모든 뉴스 보기"
-    // articleArr.forEach((el, index)=>{
-    //   // console.log("el : ", el)
-    //   console.log("index : ", index);
-    // })
-    
-    if(clipedClass == null){ //클립된 뉴스가 있는지 확인 없으면 article class 전체 display none
+    if(clipedArr.length == 0){ //클립된 뉴스가 있는지 확인 없으면 article class 전체 display none
       console.log("클립된 뉴스가 없습니다.");
-
-      // article.forEach((el, index)=>{
-      //   console.log(article[el])
-      //   console.log(index);
-      //   article[index].style.display = "none";
-      //   document.body.querySelector(".endDiv").style.display = "none";
-      // })
     }else{
-      console.log("clip한 뉴스 있음");
-      article.forEach((el, index)=>{
-        console.log(article[el])
-        console.log(index);
-        article[index].style.display = "none";
-        document.body.querySelector(".endDiv").style.display = "none";
-        clipedClass.style.display = "block";
-      })
+      console.log("클립된 뉴스가 있습니다.");
+      while(searchResult.hasChildNodes()){
+        searchResult.removeChild(searchResult.firstChild);
+      }
+      for(let i = 0; i < clipedArr.length; i++){
+        console.log("clipledArr >>>:  ",  clipedArr[i]);
+        searchResult.appendChild(clipedArr[i])
+      }
+      const clipBtn = document.querySelectorAll(".clipBtn")
     }
 
   }else{
     clipedNewsEl.innerText= "Clip된 뉴스만 보기"
-
-    article.forEach((el, index)=>{
-      console.log(article[el])
-      article[index].style.display = "block";
-      document.body.querySelector(".endDiv").style.display = "block";
-      if(clipedClass != null) {
-        clipedClass.style.display="none";
-      }
+    while(searchResult.hasChildNodes()){
+      searchResult.removeChild(searchResult.firstChild);
+    }
+    articleArr.forEach((el,index)=>{
+      searchResult.appendChild(articleArr[index])
     })
-
-    
   }
-  
-
 }
 
 
 
-document.body.addEventListener("click", (e)=>{
+clipedNewsEl.addEventListener("click",()=>{
+  checkClip();
+})
+inputEl.addEventListener("click", (e)=>{
   const searchHistoryBox = document.querySelector("#searchHistoryBox");
-  
-  if(e.target == e.currentTarget.querySelector("#clipedNews")){
-    checkClip();
-  }  
-  if(e.target == e.currentTarget.querySelector("input")){ // input 클릭시 만족하여 보여지게끔 함
+   // input 클릭시 만족하여 보여지게끔 함
     if(searchArray.length === 0){
       searchHistoryBox.style.display = "none";
       console.log("아무것도 없음");
@@ -113,23 +106,10 @@ document.body.addEventListener("click", (e)=>{
       console.log("나타남")
       searchHistoryBox.style.display = "block";
     }
-  }else{
-   console.log("사라짐");
-    searchHistoryBox.style.display = "none";
-  }
-  
-  const clipBtn = document.querySelectorAll(".clipBtn")
-  
-  clipBtn.forEach((el,index)=>{
-    el.onclick= () =>{
-      console.log(el);
-      console.log(index);
-      clip(el, index);
-      
-    }
-  })
-
-  
+})
+inputEl.addEventListener("focusout",()=>{
+  const searchHistoryBox = document.querySelector("#searchHistoryBox");
+  searchHistoryBox.style.display ="none";
 })
 
 
@@ -137,24 +117,21 @@ document.body.addEventListener("click", (e)=>{
 function clip(el ,index){
   const clipArticle = document.querySelectorAll(".article")
   const searchResult = document.querySelector("#searchResult") //최상위
+  const cloneArticle = clipArticle.item(index).cloneNode(true);
+  const article = document.querySelectorAll(".article")
   
-  console.log(el.innerText);
+  // console.log(el.innerText);
   if(el.innerText == "Clip this"){
-    const nodeClip = clipArticle.item(index).cloneNode(true);
-    nodeClip.setAttribute("class" , "cliped")
-    console.log("nodeClip : ", nodeClip);
-    nodeClip.querySelector(".clipBtn").innerHTML = "Unclip this"
-    searchResult.appendChild(nodeClip)
-    // const changeDivStyle = document.body.querySelector(".cliped")
-    // changeDivStyle.style.display="none";
-    
-    clipArticle.item(index).childNodes[2].innerText = "Unclip this"
+    clipedArr.push(cloneArticle)
+    cloneArticle.querySelector(".clipBtn").innerHTML = "Unclip this"
+    el.innerHTML = "Unclip this";
+    console.log("clipedArr : " , clipedArr);
   }else{
-    console.log("실행 실패");
-    const changeDivStyle = document.body.querySelector(".cliped")
-    clipArticle.item(index).childNodes[2].innerText = "Clip this"
-    // nodeClip.querySelector(".clipBtn").innerHTML = "Clip This"
-    // changeDivStyle.style.display="block";
+    el.innerHTML = "Clip this"
+    clipedArr.splice(index,1)
+    console.log(index);
+    searchResult.removeChild(article[index])
+    console.log(clipedArr);
   }
 }
 
@@ -170,7 +147,7 @@ function observe() {
   const listEnd = document.querySelector(".endDiv");
   const endDiv = document.querySelector(".endDiv")
   const searchResult = document.querySelector("#searchResult") //최상위
-  const inputVal = document.querySelector("input");
+  const inputEl = document.querySelector("input");
 
   const option = {
     root: null,
@@ -183,7 +160,7 @@ function observe() {
       if (entry.isIntersecting) {
         console.log("탐지 완료");
         searchResult.removeChild(endDiv);
-        SearchArticle(inputVal.value, pageIndex);
+        SearchArticle(inputEl.value, pageIndex);
         return pageIndex++;
       }
     });
@@ -195,6 +172,7 @@ function observe() {
 
 
 function SearchArticle(item, index) {
+  
   console.log(item, index);
   fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${item}&page=${index}&api-key=qbVKMvjD8NnyNN4dAYbv7kIxGZs0mrjK`)
   .then((response)=>  response.json())
@@ -213,7 +191,7 @@ function SearchArticle(item, index) {
       <div class="newsHead">${data.response.docs[i].headline.main}</div>
       <div class="newsDate">${convertDate(i)}</div>
       <button class="clipBtn">Clip this</button>
-      <a href="${data.response.docs[i].web_url}" target="_blank" >
+      <a class="linkClass" href="${data.response.docs[i].web_url}" target="_blank" >
       <button class="detailBtn">See Detail</button>
       </a>
       `
@@ -243,7 +221,7 @@ function test(){
 // test(); 구조확인용
 
 
-inputVal.addEventListener("compositionupdate", (e) => {
+inputEl.addEventListener("compositionupdate", (e) => {
   //keyup 후보
   setTimeout;
 });
