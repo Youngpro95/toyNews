@@ -68,6 +68,9 @@ function checkClip(){
     clipedNewsEl.innerText= "모든 뉴스 보기"
     if(clipedArr.length == 0){ //클립된 뉴스가 있는지 확인 없으면 article class 전체 display none
       console.log("클립된 뉴스가 없습니다.");
+      while(searchResult.hasChildNodes()){
+        searchResult.removeChild(searchResult.firstChild);
+      }
     }else{
       console.log("클립된 뉴스가 있습니다.");
       while(searchResult.hasChildNodes()){
@@ -79,13 +82,13 @@ function checkClip(){
       }
       const clipBtn = document.querySelectorAll(".clipBtn")
     }
-
   }else{
     clipedNewsEl.innerText= "Clip된 뉴스만 보기"
     while(searchResult.hasChildNodes()){
       searchResult.removeChild(searchResult.firstChild);
     }
     articleArr.forEach((el,index)=>{
+      console.log(index);
       searchResult.appendChild(articleArr[index])
     })
   }
@@ -129,7 +132,6 @@ function clip(el ,index){
   }else{
     el.innerHTML = "Clip this"
     clipedArr.splice(index,1)
-    console.log(index);
     searchResult.removeChild(article[index])
     console.log(clipedArr);
   }
@@ -202,6 +204,7 @@ function SearchArticle(item, index) {
         const endDiv = document.createElement("div")
         endDiv.setAttribute("class","endDiv")
         searchResult.appendChild(endDiv)
+        articleArr.push(endDiv)
         console.log("endDiv 생성");
         observe(); 
       }
