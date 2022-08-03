@@ -6,6 +6,7 @@ let pageIndex = 1;
 let articleArr = [];
 let clipedArr = [];
 let unclipText = [];
+let timer;
 
 document.body.addEventListener("click", () => {
   const clipBtn = document.querySelectorAll(".clipBtn");
@@ -17,7 +18,8 @@ document.body.addEventListener("click", () => {
   });
 });
 
-function addDiv() {
+function addDiv(targetVal) {
+  searchArray.unshift(targetVal);
   const keywordHistory = document.querySelector("#recentKeyword");
   const inputEl = document.querySelector("input");
   const searchHistoryDiv = document.createElement("div");
@@ -42,13 +44,24 @@ function addDiv() {
 inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     clearDiv();
-    searchArray.unshift(e.target.value);
-    addDiv();
+    addDiv(e.target.value);
     if (searchArray.length === 6) {
       searchArray.pop();
     }
   }
 }); // 검색 히스토리 배열 저장 및 5개이상 시 가장 처음 검색했던 내용 삭제
+
+
+inputEl.addEventListener("input", (e)=>{
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    if (searchArray.length === 6) {
+      searchArray.pop();
+    }
+    clearDiv();
+    addDiv(e.target.value);
+  }, 500);
+})
 
 function clearDiv() {
   const searchResult = document.querySelector("#searchResult"); //최상위
