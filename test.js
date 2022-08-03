@@ -4,12 +4,12 @@ let searchArray = [];
 let pageIndex = 1;
 let articleArr =[];
 let clipedArr = [];
-let unclipText;
+let unclipText=[];
 
 document.body.addEventListener("click",()=>{
   const clipBtn = document.querySelectorAll(".clipBtn")
   
-
+  
   clipBtn.forEach((el,index)=>{
     el.onclick= () =>{
       clip(el, index);
@@ -22,10 +22,10 @@ function addDiv() {
   const inputEl = document.querySelector("input");
   const searchHistoryDiv = document.createElement("div");
   const searchHistoryChild = document.querySelector("#searchHistory:nth-child(5)");
-
+  
   searchHistoryDiv.innerHTML = inputEl.value;
   searchHistoryDiv.setAttribute("id", "searchHistory");
-
+  
   if (searchArray.length === 6) {
     (function () {
       searchHistoryChild.parentElement.removeChild(searchHistoryChild);
@@ -35,6 +35,9 @@ function addDiv() {
   SearchArticle(inputEl.value , 0)
 }
 
+
+
+
 inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     clearDiv();
@@ -42,11 +45,15 @@ inputEl.addEventListener("keydown", (e) => {
     addDiv();
     if (searchArray.length === 6) {
       searchArray.pop();
-      console.log(searchArray);
+      // console.log(searchArray);
     }
   }
 }); // 검색 히스토리 배열 저장 및 5개이상 시 가장 처음 검색했던 내용 삭제
-
+inputEl.addEventListener("change", (e)=>{
+  setTimeout(() => {
+    
+  }, 500);
+})
 
 function clearDiv(){
   const searchResult = document.querySelector("#searchResult") //최상위
@@ -92,10 +99,13 @@ function checkClip(){
       searchResult.appendChild(articleArr[index])
     })
     const article = document.querySelectorAll(".article")
-    article.forEach((articleEl, articleIndex)=>{
-      if(articleEl.childNodes[1].innerText == unclipText){
-        articleEl.childNodes[5].innerText = "Clip this";
-      }
+    article.forEach((articleEl)=>{
+      // console.log("이건 언클립 text",unclipText);
+      unclipText.forEach((el)=>{
+        if(articleEl.childNodes[1].innerText == el){
+          articleEl.childNodes[5].innerText = "Clip this";
+        }
+      })
     })
   }
 }
@@ -147,7 +157,7 @@ function clip(el ,index){
     console.log("언클립 누른 El : " , el.parentElement.childNodes[1].innerText);
     if(clipedNewsEl.innerText == "모든 뉴스 보기"){
       searchResult.removeChild(article[index])
-      unclipText = el.parentElement.childNodes[1].innerText;
+      unclipText.push(el.parentElement.childNodes[1].innerText);
     }
     //기존 el 속성을 바꿔야함.
     console.log(clipedArr);
