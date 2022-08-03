@@ -183,7 +183,7 @@ function SearchArticle(item, index) {
           <div class="newsHead">${data.response.docs[i].headline.main}</div>
           <div class="newsDate">${convertDate(i)}</div>
           <button class="clipBtn">Clip this</button>
-          <a class="linkClass" href="${data.response.docs[i].web_url}" target="_blank" >
+          <a class="linkClass" rel="noopener" href="${data.response.docs[i].web_url}" target="_blank" >
           <button class="detailBtn">See Detail</button>
           </a>
         `;
