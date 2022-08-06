@@ -4,8 +4,6 @@
 }
 #searchResult{
   margin-top:0px;
-  
-  
 }
 #searchHistoryBox{
   display : none;
@@ -18,6 +16,8 @@ input {
   border-left: 1px black;
   border-right: 1px black;
 }
+
+
 .article{
   border-bottom : 1px solid black;
   margin-bottom: 3px;
